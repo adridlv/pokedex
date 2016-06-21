@@ -1,5 +1,4 @@
-var counter = 0;
-var i = 0;
+var helper = {counter: 0, i: 1};
 
 var Pokemon = function(name, types, weight){
   this.name = name,
@@ -30,11 +29,14 @@ function searchPokemon(search, searchControl){
   var type= [];
   var weight="";
   if(searchControl){
-    counter = 0;
-    i = 1;
+    var counter = 0;
+    var i = 1;
 
-    console.log("buscando");
-    searchPokemonByType(i,search);
+    while(helper.counter < 4){
+      console.log("i: "+helper.i+"counter: "+helper.counter);
+      searchPokemonByType(helper.i,search);
+      helper.i++;
+    }
     
   }
   else{
@@ -78,8 +80,7 @@ function searchPokemonByType(index, type){
     if(pokemon.types[0].type.name === type || pokemon.types[1].type.name === type){
       console.log("entro por aqui");
       generateCard(pokemon); 
-      counter++;
-      i++;
+      helper.counter++;
     }
     
   },
