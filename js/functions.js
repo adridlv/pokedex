@@ -1,9 +1,11 @@
-var helper = {counter: 0, i: 1};
+var arrayPokemon = [];
 
-var Pokemon = function(name, types, weight){
+var Pokemon = function(name, types, weight, url){
   this.name = name,
   this.types = types,
-  this.weight = weight;
+  this.weight = weight
+  this.url = url,
+  this.evolutions = [];
 }
 
 function generateCard(pokemon){
@@ -16,32 +18,14 @@ function generateCard(pokemon){
 
   var html = 
   "<div class=\"card\">"+
+  "<img src=\""+pokemon.url+"\">"+
   "<h2 class=\"namePokemon\">"+pokemon.name+"</h2>"+
   "<div class=\"types\" ><p>"+ type +"</p></div>"+
   "<div class=\"weight\" ><p>"+pokemon.weight +"</p></div>"+
+  "<div class=\"container-evolutions\"></div>"+
   "</div>";
 
   $(".container-pokemon").append(html);
-}
-
-function searchPokemon(search, searchControl){
-  var name = "";
-  var type= [];
-  var weight="";
-  if(searchControl){
-    var counter = 0;
-    var i = 1;
-
-    while(helper.counter < 4){
-      console.log("i: "+helper.i+"counter: "+helper.counter);
-      searchPokemonByType(helper.i,search);
-      helper.i++;
-    }
-    
-  }
-  else{
-    searchPokemonById(search);
-  }
 }
 
 function searchPokemonById(index){
@@ -55,7 +39,8 @@ function searchPokemonById(index){
   },
   dataType: 'json',
   success: function(data){
-    var pokemon = new Pokemon(data.name,data.types,data.weight);
+    var pokemon = new Pokemon(data.name,data.types,data.weight,data.sprites.front_default);
+    searchEvolutionsPokemon(index, pokemon);
     generateCard(pokemon); 
   },
   type: 'GET'
@@ -63,10 +48,9 @@ function searchPokemonById(index){
 });
 }
 
-function searchPokemonByType(index, type){
-
+function searchEvolutionsPokemon(index, pokemon){
   $.ajax({
-   url: 'http://pokeapi.co/api/v2/pokemon/'+index+'/',
+   url: 'http://pokeapi.co/api/v2/evolution-chain/'+index+'/',
    data: {
     format: 'json'
   },
@@ -75,33 +59,74 @@ function searchPokemonByType(index, type){
   },
   dataType: 'json',
   success: function(data){
-    var pokemon = new Pokemon(data.name,data.types,data.weight);
-
-    if(pokemon.types[0].type.name === type || pokemon.types[1].type.name === type){
-      console.log("entro por aqui");
-      generateCard(pokemon); 
-      helper.counter++;
-    }
-    
+    pokemon.evolutions.push(data.chain.evolves_to[0].species["name"]);
+    console.log(pokemon.evolutions);
   },
   type: 'GET'
 
 });
-  
+}
+
+function searchPokemonByURL(url){
+  $.ajax({
+   url: url,
+   data: {
+    format: 'json'
+  },
+  error: function() {
+
+  },
+  dataType: 'json',
+  success: function(data){
+    var pokemon = new Pokemon(data.name,data.types,data.weight,data.sprites.front_default);
+    generateCard(pokemon); 
+  },
+  type: 'GET'
+
+});
+}
+
+function searchPokemonByType(index){
+  $.ajax({
+    url: 'http://pokeapi.co/api/v2/type/'+index+'/',
+   data: {
+    format: 'json'
+  },
+  error: function() {
+
+  },
+  dataType: 'json',
+  success: function(data){
+
+    arrayPokemon = data.pokemon;
+    for(var i = 0; i<10; i++){
+      searchPokemonByURL(arrayPokemon[i].pokemon["url"]);
+    }
+    /*
+    arrayPokemon.forEach(function(pokemon){
+      searchPokemonByURL(pokemon.pokemon["url"]);
+    });*/ 
+  },
+  type: 'GET'
+
+});
 }
 
 $(document).ready(function(){
-  $(".search").keypress(function(event){
+  /*$(".search").keypress(function(event){
     if(event.keyCode === 13){
-      console.log("he entrado");
-      var texto = $(this).val();
-      var searchControl = false;
-
-      //checkear que exista el tipo POR HACER
-      searchControl = isNaN(texto);
-      searchPokemon($(this).val(), searchControl);
+      searchPokemonById($(this).val());
     }
+  });*/
+
+  $(".searchById").click(function(){
+    var text = $(".search").val();
+    searchPokemonById(text);
+  });
+
+  $(".searchByType").click(function(){
+    var text = $(".search").val();
+    console.log("Searching pokemons...");
+    searchPokemonByType(text);
   });
 });
-
-
