@@ -1,11 +1,12 @@
 var arrayPokemon = [];
+var evolutionPokemon = "";
 
 var Pokemon = function(name, types, weight, url){
   this.name = name,
   this.types = types,
   this.weight = weight
   this.url = url,
-  this.evolutions = [];
+  this.evolution = "";
 }
 
 function generateCard(pokemon){
@@ -22,15 +23,15 @@ function generateCard(pokemon){
   "<h2 class=\"namePokemon\">"+pokemon.name+"</h2>"+
   "<div class=\"types\" ><p>"+ type +"</p></div>"+
   "<div class=\"weight\" ><p>"+pokemon.weight +"</p></div>"+
-  "<div class=\"container-evolutions\"></div>"+
+  "<div class=\"container-evolutions\">"+pokemon.evolution+"</div>"+
   "</div>";
 
   $(".container-pokemon").append(html);
 }
 
-function searchPokemonById(index){
+function searchPokemon(urlAux, index, callFunction){
   $.ajax({
-   url: 'http://pokeapi.co/api/v2/pokemon/'+index+'/',
+   url: urlAux+""+index,
    data: {
     format: 'json'
   },
@@ -39,94 +40,43 @@ function searchPokemonById(index){
   },
   dataType: 'json',
   success: function(data){
-    var pokemon = new Pokemon(data.name,data.types,data.weight,data.sprites.front_default);
-    searchEvolutionsPokemon(index, pokemon);
-    generateCard(pokemon); 
-  },
+    callFunction(data, index)},
   type: 'GET'
-
 });
 }
 
-function searchEvolutionsPokemon(index, pokemon){
-  $.ajax({
-   url: 'http://pokeapi.co/api/v2/evolution-chain/'+index+'/',
-   data: {
-    format: 'json'
-  },
-  error: function() {
-
-  },
-  dataType: 'json',
-  success: function(data){
-    pokemon.evolutions.push(data.chain.evolves_to[0].species["name"]);
-    console.log(pokemon.evolutions);
-  },
-  type: 'GET'
-
-});
+function appendDataPokemon(data, index){
+  var pokemonV1 = searchPokemon("http://pokeapi.co/api/v1/pokemon/", index, getPokemonV1);
+  printPokemon(data);
 }
 
-function searchPokemonByURL(url){
-  $.ajax({
-   url: url,
-   data: {
-    format: 'json'
-  },
-  error: function() {
-
-  },
-  dataType: 'json',
-  success: function(data){
-    var pokemon = new Pokemon(data.name,data.types,data.weight,data.sprites.front_default);
-    generateCard(pokemon); 
-  },
-  type: 'GET'
-
-});
+function getPokemonV1(data){
+  //evolutionPokemon = data.evolutions[0].to;
 }
 
-function searchPokemonByType(index){
-  $.ajax({
-    url: 'http://pokeapi.co/api/v2/type/'+index+'/',
-   data: {
-    format: 'json'
-  },
-  error: function() {
+function printPokemon(data){
+  var pokemon = new Pokemon(data.name,data.types,data.weight,data.sprites.front_default, evolutionPokemon);
+  generateCard(pokemon); 
+}
 
-  },
-  dataType: 'json',
-  success: function(data){
+function printPokemonArray(data, index){
+  var arrayPokemon = data.pokemon;
+  arrayPokemon = arrayPokemon.splice(0,10);
 
-    arrayPokemon = data.pokemon;
-    for(var i = 0; i<10; i++){
-      searchPokemonByURL(arrayPokemon[i].pokemon["url"]);
-    }
-    /*
-    arrayPokemon.forEach(function(pokemon){
-      searchPokemonByURL(pokemon.pokemon["url"]);
-    });*/ 
-  },
-  type: 'GET'
-
-});
+  arrayPokemon.forEach(function(item){
+    searchPokemon(item.pokemon["url"],"",appendDataPokemon);
+  });
 }
 
 $(document).ready(function(){
-  /*$(".search").keypress(function(event){
-    if(event.keyCode === 13){
-      searchPokemonById($(this).val());
-    }
-  });*/
-
   $(".searchById").click(function(){
     var text = $(".search").val();
-    searchPokemonById(text);
+    searchPokemon("http://pokeapi.co/api/v2/pokemon/",text, appendDataPokemon);
   });
 
   $(".searchByType").click(function(){
     var text = $(".search").val();
     console.log("Searching pokemons...");
-    searchPokemonByType(text);
+    searchPokemon("http://pokeapi.co/api/v2/type/",text,printPokemonArray);
   });
 });
