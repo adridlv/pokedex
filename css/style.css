@@ -1,0 +1,104 @@
+
+@font-face {
+  font-family: PokemonSolid;
+  src: url(../PokemonSolid.ttf);
+
+}
+
+@font-face {
+  font-family: PokemonHollow;
+  src: url(../PokemonHollow.ttf);
+}
+
+h1,.title {
+  font-family: PokemonSolid;
+  text-align: center;
+
+}
+
+.centrar {
+
+  padding-top: 50px;
+  padding-right: 50px;
+  padding-bottom: 50px;
+  padding-left: 50px;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.card {
+  -webkit-transform-style: preserve-3d;
+  width: 245px; 
+  height: 342px;
+  display:inline-block;
+  margin:1em;
+  /*-webkit-transform: rotateY(360deg);*/
+  -webkit-animation: spin 2s linear;
+  background: rgba(241,231,103,1);
+  background: -moz-linear-gradient(left, rgba(241,231,103,1) 0%, rgba(254,182,69,1) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(241,231,103,1)), color-stop(100%, rgba(254,182,69,1)));
+  background: -webkit-linear-gradient(left, rgba(241,231,103,1) 0%, rgba(254,182,69,1) 100%);
+  background: -o-linear-gradient(left, rgba(241,231,103,1) 0%, rgba(254,182,69,1) 100%);
+  background: -ms-linear-gradient(left, rgba(241,231,103,1) 0%, rgba(254,182,69,1) 100%);
+  background: linear-gradient(to right, rgba(241,231,103,1) 0%, rgba(254,182,69,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1e767', endColorstr='#feb645', GradientType=1 );
+  border-radius: 10px;
+  
+}
+
+.imgPokemon {
+  position: relative;
+  top: 10px;
+  width: 225px; height: 205px;
+  border: 20px rgb(255, 255, 255) solid;
+  border-radius: 5px;
+}
+
+.back {
+  position: absolute;
+  width: 245px; height: 342px;
+  background:url('../backCard.jpg');
+  -webkit-transform: translateZ(-1px) rotateY(180deg);
+  background-size: cover;
+  top: 0px;
+}
+
+.container-pokemon {
+  -webkit-perspective: 1000px;  
+  width: 245px; 
+  height: 342px; 
+  margin: 30px auto;
+  display:inline-block;
+  text-align:center;
+  width:100%;
+}
+
+.namePokemon {
+  position: relative;
+  text-align: center;
+  font-family: PokemonSolid;
+  
+}
+
+div .types, div .weight {
+  font-family: PokemonSolid;
+  font-size: 18px;
+  text-align:center;
+}
+
+.front {
+  width: 245px; 
+  height: 342px; 
+  box-shadow: 0px 0px 100px 10px white; 
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotateY(180deg)
+  }
+
+  100% {
+    -webkit-transform: rotateY(360deg);
+  }
+}

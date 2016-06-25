@@ -2,22 +2,33 @@
 <html>
 <head>
 	<title>Pokedex</title>
-	<link rel="stylesheet" href="css/bootstrap.min.css">
+	
 	<script type="text/javascript" src="js/jquery-2.1.3.js"></script>
-	<script type="text/javascript" src="js/functions.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+	
 </head>
 <body>
 
-	<input type="text" name="" id="" class="search" placeholder="Insert a pokemon ID">
-	
-	<button class="searchById">Search by ID</button>
-	<button class="searchByType">Search by Type</button>
-	
-	<div class="container-pokemon">
-		
+
+	<h1 class="title"> What pokemon do you want to search on your Pokedex?</h1>
+
+	<div class= "centrar">
+
+		<input type="text" name="" id="texto" class="search form-group form-control" placeholder="Insert a pokemon ID/Name or a Type">
+
+		<button class="searchById btn btn-primary">Search by ID/Name</button>
+		<button class="searchByType btn btn-primary">Search by Type</button>
+
+		<div class="container-pokemon">	
+		</div>
+
 	</div>
 
+
+	<script type="text/javascript" src="js/functions.js"></script>
 
 	
 </body>
